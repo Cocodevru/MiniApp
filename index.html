@@ -115,9 +115,9 @@
             <button class="category-btn" onclick="showCategory('phones')"><img src="images/iphone.jpg" alt="Телефоны"> Телефоны</button>
             <button class="category-btn" onclick="showCategory('laptops')"><img src="images/notebook.jpg" alt="Ноутбуки"> Ноутбуки</button>
             <button class="category-btn" onclick="showCategory('tablets')"><img src="images/ipad.jpg" alt="Планшеты"> Планшеты</button>
-            <button class="category-btn" onclick="showCategory('watches')"><img src="https://via.placeholder.com/80" alt="Часы"> Часы</button>
-            <button class="category-btn" onclick="showCategory('headphones')"><img src="https://via.placeholder.com/80" alt="Наушники"> Наушники</button>
-            <button class="category-btn" onclick="showCategory('accessories')"><img src="https://via.placeholder.com/80" alt="Аксессуары"> Аксессуары</button>
+            <button class="category-btn" onclick="showCategory('watches')"><img src="images/watch.jpg" alt="Часы"> Часы</button>
+            <button class="category-btn" onclick="showCategory('headphones')"><img src="images/headphones.jpg" alt="Наушники"> Наушники</button>
+            <button class="category-btn" onclick="showCategory('accessories')"><img src="images/accessory.jpg" alt="Аксессуары"> Аксессуары</button>
         </div>
     </div>
 
@@ -149,15 +149,16 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
+        tg.expand(); // Разворачиваем приложение на полный экран
         tg.MainButton.setText("Закрыть").show().onClick(() => tg.close());
 
         const categories = {
             phones: [
-                { id: 1, name: "iPhone 14", price: 80000, discountPrice: 75000, images: ["https://via.placeholder.com/200", "https://via.placeholder.com/200/FF0000"], description: "Смартфон Apple iPhone 14 с отличной камерой и мощным процессором. Подходит для любых задач.", parameters: "Экран: 6.1 дюйма, Камера: 12 МП, Память: 128 ГБ" },
-                { id: 2, name: "Samsung Galaxy S23", price: 70000, discountPrice: 65000, images: ["https://via.placeholder.com/200"], description: "Samsung Galaxy S23 с ярким экраном и долгим временем работы.", parameters: "Экран: 6.2 дюйма, Камера: 50 МП, Память: 256 ГБ" }
+                { id: 1, name: "iPhone 14", price: 80000, discountPrice: 75000, images: ["images/iphone.jpg", "images/iphone2.jpg"], description: "Смартфон Apple iPhone 14 с отличной камерой и мощным процессором. Подходит для любых задач.", parameters: "Экран: 6.1 дюйма, Камера: 12 МП, Память: 128 ГБ" },
+                { id: 2, name: "Samsung Galaxy S23", price: 70000, discountPrice: 65000, images: ["images/galaxys23.jpg"], description: "Samsung Galaxy S23 с ярким экраном и долгим временем работы.", parameters: "Экран: 6.2 дюйма, Камера: 50 МП, Память: 256 ГБ" }
             ],
             laptops: [
-                { id: 3, name: "MacBook Air M2", price: 120000, discountPrice: 110000, images: ["https://via.placeholder.com/200"], description: "Лёгкий и мощный ноутбук от Apple.", parameters: "Экран: 13.6 дюйма, Процессор: M2, Память: 512 ГБ" }
+                { id: 3, name: "MacBook Air M2", price: 120000, discountPrice: 110000, images: ["images/macbookair.jpg"], description: "Лёгкий и мощный ноутбук от Apple.", parameters: "Экран: 13.6 дюйма, Процессор: M2, Память: 512 ГБ" }
             ]
             // Добавь другие категории по аналогии
         };
