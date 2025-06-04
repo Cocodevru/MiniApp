@@ -38,12 +38,20 @@
             border: 1px solid #ccc;
             border-radius: 10px;
             cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+            justify-content: flex-start; /* Изменено для выравнивания */
         }
         .category-btn img {
-            width: 80px;
-            height: 80px;
-            margin-right: 10px;
+            width: 100px;
+            height: 100px;
+            margin-right: 15px; /* Увеличен отступ для лучшего разделения */
             border-radius: 5px;
+        }
+        .category-btn span {
+            font-size: 18px; /* Увеличен размер текста */
+            font-weight: 600; /* Сделал текст чуть жирнее */
+            margin-left: auto; /* Сдвигает текст вправо */
         }
         .product-grid {
             display: grid;
@@ -112,12 +120,12 @@
             <input type="text" class="search-bar" placeholder="Поиск">
         </div>
         <div id="categories">
-            <button class="category-btn" onclick="showCategory('phones')"><img src="images/iphone.jpg" alt="Телефоны"> Телефоны</button>
-            <button class="category-btn" onclick="showCategory('laptops')"><img src="images/notebook.jpg" alt="Ноутбуки"> Ноутбуки</button>
-            <button class="category-btn" onclick="showCategory('tablets')"><img src="images/ipad.jpg" alt="Планшеты"> Планшеты</button>
-            <button class="category-btn" onclick="showCategory('watches')"><img src="images/watch.jpg" alt="Часы"> Часы</button>
-            <button class="category-btn" onclick="showCategory('headphones')"><img src="images/headphones.jpg" alt="Наушники"> Наушники</button>
-            <button class="category-btn" onclick="showCategory('accessories')"><img src="images/accessory.jpg" alt="Аксессуары"> Аксессуары</button>
+            <button class="category-btn" onclick="showCategory('phones')"><img src="images/iphone.jpg" alt="Телефоны"><span>Телефоны</span></button>
+            <button class="category-btn" onclick="showCategory('laptops')"><img src="images/notebook.jpg" alt="Ноутбуки"><span>Ноутбуки</span></button>
+            <button class="category-btn" onclick="showCategory('tablets')"><img src="images/ipad.jpg" alt="Планшеты"><span>Планшеты</span></button>
+            <button class="category-btn" onclick="showCategory('watches')"><img src="images/watch.jpg" alt="Часы"><span>Часы</span></button>
+            <button class="category-btn" onclick="showCategory('headphones')"><img src="images/headphones.jpg" alt="Наушники"><span>Наушники</span></button>
+            <button class="category-btn" onclick="showCategory('accessories')"><img src="images/accessory.jpg" alt="Аксессуары"><span>Аксессуары</span></button>
         </div>
     </div>
 
