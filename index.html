@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин в Telegram</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .search-bar {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            margin-right: 10px;
+        }
+        .category-btn {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .category-btn img {
+            width: 80px;
+            height: 80px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .product-card {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+        .product-card img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .product-detail {
+            text-align: center;
+        }
+        .product-detail img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .price {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .old-price {
+            text-decoration: line-through;
+            color: #888;
+        }
+        .discount-price {
+            color: #e63946;
+            margin-left: 10px;
+        }
+        .description {
+            text-align: left;
+            max-height: 60px;
+            overflow: hidden;
+            transition: max-height 0.3s;
+        }
+        .description.expanded {
+            max-height: 1000px;
+        }
+        .more-btn {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="main-page">
+        <div class="header">
+            <input type="text" class="search-bar" placeholder="Поиск">
+        </div>
+        <div id="categories">
+            <button class="category-btn" onclick="showCategory('phones')"><img src="images/iphone.jpg" alt="Телефоны"> Телефоны</button>
+            <button class="category-btn" onclick="showCategory('laptops')"><img src="images/notebook.jpg" alt="Ноутбуки"> Ноутбуки</button>
+            <button class="category-btn" onclick="showCategory('tablets')"><img src="images/ipad.jpg" alt="Планшеты"> Планшеты</button>
+            <button class="category-btn" onclick="showCategory('watches')"><img src="https://via.placeholder.com/80" alt="Часы"> Часы</button>
+            <button class="category-btn" onclick="showCategory('headphones')"><img src="https://via.placeholder.com/80" alt="Наушники"> Наушники</button>
+            <button class="category-btn" onclick="showCategory('accessories')"><img src="https://via.placeholder.com/80" alt="Аксессуары"> Аксессуары</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="category-page">
+        <h2 id="category-title"></h2>
+        <div class="product-grid" id="product-grid"></div>
+        <button onclick="showMainPage()">Назад</button>
+    </div>
+
+    <div class="container hidden" id="product-page">
+        <div class="product-detail">
+            <div id="product-images">
+                <img id="main-image" src="" alt="Товар">
+                <button onclick="prevImage()">◄</button>
+                <button onclick="nextImage()">►</button>
+            </div>
+            <h2 id="product-name"></h2>
+            <div class="price">
+                <span class="old-price" id="old-price"></span>
+                <span class="discount-price" id="discount-price"></span>
+            </div>
+            <div class="description" id="description"></div>
+            <button class="more-btn" onclick="toggleDescription()">Ещё ▼</button>
+            <div id="parameters"></div>
+        </div>
+        <button onclick="showCategory(currentCategory)">Назад</button>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.MainButton.setText("Закрыть").show().onClick(() => tg.close());
+
+        const categories = {
+            phones: [
+                { id: 1, name: "iPhone 14", price: 80000, discountPrice: 75000, images: ["https://via.placeholder.com/200", "https://via.placeholder.com/200/FF0000"], description: "Смартфон Apple iPhone 14 с отличной камерой и мощным процессором. Подходит для любых задач.", parameters: "Экран: 6.1 дюйма, Камера: 12 МП, Память: 128 ГБ" },
+                { id: 2, name: "Samsung Galaxy S23", price: 70000, discountPrice: 65000, images: ["https://via.placeholder.com/200"], description: "Samsung Galaxy S23 с ярким экраном и долгим временем работы.", parameters: "Экран: 6.2 дюйма, Камера: 50 МП, Память: 256 ГБ" }
+            ],
+            laptops: [
+                { id: 3, name: "MacBook Air M2", price: 120000, discountPrice: 110000, images: ["https://via.placeholder.com/200"], description: "Лёгкий и мощный ноутбук от Apple.", parameters: "Экран: 13.6 дюйма, Процессор: M2, Память: 512 ГБ" }
+            ]
+            // Добавь другие категории по аналогии
+        };
+
+        let currentCategory = '';
+        let currentProduct = null;
+        let currentImageIndex = 0;
+
+        function showMainPage() {
+            document.getElementById('main-page').classList.remove('hidden');
+            document.getElementById('category-page').classList.add('hidden');
+            document.getElementById('product-page').classList.add('hidden');
+        }
+
+        function showCategory(category) {
+            currentCategory = category;
+            document.getElementById('main-page').classList.add('hidden');
+            document.getElementById('category-page').classList.remove('hidden');
+            document.getElementById('product-page').classList.add('hidden');
+
+            document.getElementById('category-title').innerText = category.charAt(0).toUpperCase() + category.slice(1);
+            const productGrid = document.getElementById('product-grid');
+            productGrid.innerHTML = '';
+            categories[category].forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <img src="${product.images[0]}" alt="${product.name}">
+                    <p>${product.discountPrice || product.price} руб.</p>
+                    <h4>${product.name}</h4>
+                `;
+                card.onclick = () => showProduct(product);
+                productGrid.appendChild(card);
+            });
+        }
+
+        function showProduct(product) {
+            currentProduct = product;
+            currentImageIndex = 0;
+            document.getElementById('main-page').classList.add('hidden');
+            document.getElementById('category-page').classList.add('hidden');
+            document.getElementById('product-page').classList.remove('hidden');
+
+            document.getElementById('main-image').src = product.images[0];
+            document.getElementById('product-name').innerText = product.name;
+            document.getElementById('old-price').innerText = product.price + ' руб.';
+            document.getElementById('discount-price').innerText = product.discountPrice ? product.discountPrice + ' руб.' : '';
+            document.getElementById('description').innerText = product.description;
+            document.getElementById('parameters').innerText = product.parameters;
+        }
+
+        function prevImage() {
+            if (currentImageIndex > 0) {
+                currentImageIndex--;
+                document.getElementById('main-image').src = currentProduct.images[currentImageIndex];
+            }
+        }
+
+        function nextImage() {
+            if (currentImageIndex < currentProduct.images.length - 1) {
+                currentImageIndex++;
+                document.getElementById('main-image').src = currentProduct.images[currentImageIndex];
+            }
+        }
+
+        function toggleDescription() {
+            const desc = document.getElementById('description');
+            desc.classList.toggle('expanded');
+            const btn = document.querySelector('.more-btn');
+            btn.innerHTML = desc.classList.contains('expanded') ? 'Свернуть ▲' : 'Ещё ▼';
+        }
+    </script>
+</body>
+</html>
